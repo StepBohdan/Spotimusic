@@ -221,8 +221,9 @@ app.post("/auth/logout", (req: Request, res: Response) => {
 
 
 
-const PORT = 4000;
-app.listen(PORT, () => {
-  console.log(`Simple auth server on http://localhost:${PORT}`);
+const PORT = Number(process.env.PORT) || 3000;
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
