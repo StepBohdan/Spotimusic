@@ -1,73 +1,147 @@
-# React + TypeScript + Vite
+# Spotimusic 🎧
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A lightweight Spotify-inspired music app built with **React + Vite** on the frontend and a simple **Express API** on the backend.  
+Includes JWT authentication (access token + refresh token via HTTP-only cookies), protected routes, and a clean developer setup for local + production deployment.
 
-Currently, two official plugins are available:
+## ✨ Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- ⚡ Fast frontend: React + Vite
+- 🔐 Auth system:
+  - Access token (JWT)
+  - Refresh token stored in **HTTP-only cookie**
+  - Token refresh endpoint
+- 👤 Protected endpoint: `/me`
+- 🍪 Cookies + CORS configured for GitHub Pages ↔ Railway
+- 🚀 Deployment:
+  - Frontend on **GitHub Pages**
+  - Backend on **Railway**
 
-## React Compiler
+## 🧱 Tech Stack
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+**Frontend**
+- React
+- Redux Toolkit
+- React Router
+- Vite
 
-## Expanding the ESLint configuration
+**Backend**
+- Node.js
+- Express
+- JWT (jsonwebtoken)
+- bcrypt
+- cookie-parser
+- cors
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 📁 Project Structure
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+```text
+/
+├─ src/                # React app
+├─ server.ts           # Express API
+├─ dist/               # Build output (generated)
+├─ vite.config.ts
+└─ tsconfig.server.json
+```
+## ✅ Requirements
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- Node.js 18+ (recommended 20+)
+- npm
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🛠️ Local Development
+
+### 1) Install dependencies
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2) Create .env for local usage (DO NOT COMMIT)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Create a file named .env in the project root:
 ```
+JWT_ACCESS_SECRET=your_access_secret
+JWT_REFRESH_SECRET=your_refresh_secret
+VITE_API_URL=http://localhost:3000
+```
+### 3) Run backend (API)
+```
+npm run server
+```
+API will be available at:
+```
+http://localhost:3000
+```
+
+### 4) Run frontend (Vite)
+
+In a second terminal:
+```
+npm run dev
+```
+
+Frontend will be available at:
+```
+http://localhost:5173
+```
+
+🔌 API Endpoints
+```
+Base URL (local): http://localhost:3000
+```
+Method	Endpoint	Description
+```
+POST	/auth/register	Register new user
+POST	/auth/login	Login, returns access token, sets refresh cookie
+POST	/auth/refresh	Refresh access token using cookie
+POST	/auth/logout	Logout + clear cookie
+GET	/me	Protected user endpoint (requires Authorization: Bearer <token>)
+```
+## 🌐 Production Setup
+Frontend (GitHub Pages)
+
+Create .env.production (safe to commit, contains no secrets):
+
+VITE_API_URL=https://YOUR-RAILWAY-DOMAIN.up.railway.app
+
+Build + deploy:
+```
+npm run build
+npm run deploy
+```
+
+Backend (Railway)
+
+Set variables in Railway → Variables:
+```
+NODE_ENV=production
+
+JWT_ACCESS_SECRET=...
+
+JWT_REFRESH_SECRET=...
+```
+Railway commands:
+
+Build Command: npm run build:server
+
+Start Command: npm start
+
+## ⚠️ Notes on Cookies + CORS
+
+This project uses credentials: 'include' on the client and HTTP-only cookies for refresh tokens.
+For GitHub Pages ↔ Railway, cookies must be set with:
+```
+SameSite=None
+
+Secure=true (HTTPS required)
+```
+CORS must allow:
+https://stepbohdan.github.io
+and set credentials: true.
+
+## 📌 Roadmap (optional)
+
+Persist users in a database (PostgreSQL / MongoDB)
+
+Improve UI/UX and responsiveness
+
+
+# Made with ❤️ by StepBohdan
