@@ -99,9 +99,9 @@ GET	/me	Protected user endpoint (requires Authorization: Bearer <token>)
 Frontend (GitHub Pages)
 
 Create .env.production (safe to commit, contains no secrets):
-
+```
 VITE_API_URL=https://YOUR-RAILWAY-DOMAIN.up.railway.app
-
+```
 Build + deploy:
 ```
 npm run build
