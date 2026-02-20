@@ -1,0 +1,705 @@
+.profile-container {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #1e1e1e 0%, #121212 100%);
+  padding: 24px;
+  color: #ffffff;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  scrollbar-color: #404040 #121212;
+}
+
+.profile-container::-webkit-scrollbar {
+  width: 12px;
+}
+
+.profile-container::-webkit-scrollbar-track {
+  background: #121212;
+}
+
+.profile-container::-webkit-scrollbar-thumb {
+  background: #404040;
+  border-radius: 6px;
+}
+
+.profile-container::-webkit-scrollbar-thumb:hover {
+  background: #555555;
+}
+
+.profile-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 16px;
+}
+
+.profile-error p {
+  font-size: 18px;
+  color: #b3b3b3;
+}
+
+.profile-error button {
+  padding: 12px 24px;
+  background-color: #1db954;
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.profile-error button:hover {
+  background-color: #1ed760;
+  transform: scale(1.02);
+}
+
+.profile-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin: -24px -24px 48px -24px; 
+  padding: 32px 24px 24px 24px;
+  background: linear-gradient(135deg, #252525 0%, #424242 50%, #121212 100%);
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  font-weight: 700;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-username {
+  font-size: 48px;
+  font-weight: 900;
+  margin: 0 0 8px 0;
+  color: #ffffff;
+}
+
+.profile-email {
+  font-size: 16px;
+  color: #b3b3b3;
+  margin: 0;
+}
+
+.profile-content {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.profile-section {
+  width: 100%;
+}
+
+.profile-section-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 24px 0;
+  color: #ffffff;
+}
+
+.profile-tracks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 24px;
+}
+
+.profile-playlists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 24px;
+}
+
+.profile-playlist-card {
+  background-color: #181818;
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.profile-playlist-card:hover {
+  background-color: #282828;
+  transform: translateY(-4px);
+}
+
+.profile-playlist-image {
+  width: 100%;
+  aspect-ratio: 1;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: visible;
+}
+
+.profile-playlist-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.profile-playlist-card:hover .profile-playlist-image-placeholder {
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+}
+
+.profile-playlist-image-placeholder .play-icon {
+  font-size: 48px;
+  color: #ffffff;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translateY(8px);
+}
+
+.profile-playlist-card:hover .profile-playlist-image-placeholder .play-icon {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.profile-playlist-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 62px;
+}
+
+.profile-playlist-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 4px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-playlist-card:hover .profile-playlist-name {
+  color: #ffffff;
+}
+
+.profile-playlist-count {
+  font-size: 14px;
+  color: #b3b3b3;
+  margin: 0;
+}
+
+.profile-playlist-card:hover .profile-playlist-count {
+  color: #ffffff;
+}
+
+.profile-playlist-image-placeholder {
+  position: relative;
+}
+
+.profile-playlist-image .playlist-settings-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.profile-playlist-image .playlist-settings-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.profile-playlist-card:hover .playlist-settings-btn {
+  opacity: 1;
+}
+
+.profile-playlist-image .playlist-settings-btn:hover {
+  background-color: rgba(0, 0, 0, 0.9);
+  transform: scale(1.1);
+}
+
+.profile-playlist-card .playlist-options-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background-color: #282828;
+  border-radius: 4px;
+  padding: 4px;
+  min-width: 180px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  animation: playlistMenuFadeIn 0.2s ease;
+}
+
+.profile-playlist-card .playlist-option-item {
+  width: 100%;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background-color 0.2s ease;
+}
+
+.profile-playlist-card .playlist-option-item:hover {
+  background-color: #3a3a3a;
+}
+
+.profile-playlist-card .playlist-option-item.delete {
+  color: #ff4444;
+}
+
+.profile-playlist-card .playlist-option-item.delete:hover {
+  background-color: rgba(255, 68, 68, 0.1);
+  color: #ff6666;
+}
+
+.profile-empty-state {
+  padding: 48px 24px;
+  text-align: center;
+  color: #b3b3b3;
+  font-size: 16px;
+}
+
+/* Tablet styles */
+@media (max-width: 1024px) {
+  .profile-container {
+    padding: 20px;
+  }
+  
+  .profile-header {
+    gap: 20px;
+    padding: 28px 20px 20px 20px;
+    margin: -20px -20px 40px -20px;
+  }
+  
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+    font-size: 40px;
+  }
+  
+  .profile-username {
+    font-size: 40px;
+  }
+  
+  .profile-email {
+    font-size: 14px;
+  }
+  
+  .profile-content {
+    gap: 40px;
+  }
+  
+  .profile-section-title {
+    font-size: 20px;
+    margin: 0 0 20px 0;
+  }
+  
+  .profile-tracks-grid,
+  .profile-playlists-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 20px;
+  }
+  
+  .profile-playlist-image-placeholder .play-icon {
+    font-size: 40px;
+  }
+  
+  .profile-playlist-image .playlist-settings-btn {
+    width: 26px;
+    height: 26px;
+  }
+  
+  .profile-playlist-image .playlist-settings-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .profile-playlist-card .playlist-options-menu {
+    min-width: 160px;
+  }
+  
+  .profile-playlist-card .playlist-option-item {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 12px;
+  }
+  
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+    padding: 20px 12px 16px 12px;
+    margin: -12px -12px 24px -12px;
+  }
+  
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+    font-size: 32px;
+  }
+  
+  .profile-username {
+    font-size: 28px;
+    margin: 0 0 4px 0;
+  }
+  
+  .profile-email {
+    font-size: 13px;
+  }
+  
+  .profile-content {
+    gap: 32px;
+  }
+  
+  .profile-section-title {
+    font-size: 18px;
+    margin: 0 0 16px 0;
+  }
+  
+  .profile-tracks-grid,
+  .profile-playlists-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+  }
+  
+  .profile-playlist-card {
+    padding: 12px;
+  }
+  
+  .profile-playlist-image {
+    margin-bottom: 12px;
+  }
+  
+  .profile-playlist-name {
+    font-size: 14px;
+    margin: 0 0 4px 0;
+  }
+  
+  .profile-playlist-count {
+    font-size: 12px;
+  }
+  
+  .profile-playlist-info {
+    min-height: 50px;
+  }
+  
+  .profile-playlist-image-placeholder .play-icon {
+    font-size: 36px;
+  }
+  
+  .profile-playlist-image .playlist-settings-btn {
+    width: 24px;
+    height: 24px;
+    top: 6px;
+    right: 6px;
+  }
+  
+  .profile-playlist-image .playlist-settings-btn svg {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .profile-playlist-card .playlist-options-menu {
+    min-width: 150px;
+    padding: 3px;
+  }
+  
+  .profile-playlist-card .playlist-option-item {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+  
+  .profile-error {
+    min-height: 50vh;
+    gap: 12px;
+  }
+  
+  .profile-error p {
+    font-size: 16px;
+  }
+  
+  .profile-error button {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+  
+  .profile-empty-state {
+    padding: 32px 16px;
+    font-size: 14px;
+  }
+}
+
+/* Small mobile styles */
+@media (max-width: 480px) {
+  .profile-container {
+    padding: 8px;
+  }
+  
+  .profile-header {
+    padding: 16px 8px 12px 8px;
+    margin: -8px -8px 20px -8px;
+    gap: 10px;
+  }
+  
+  .profile-avatar {
+    width: 64px;
+    height: 64px;
+    font-size: 28px;
+  }
+  
+  .profile-username {
+    font-size: 24px;
+  }
+  
+  .profile-email {
+    font-size: 12px;
+  }
+  
+  .profile-content {
+    gap: 24px;
+  }
+  
+  .profile-section-title {
+    font-size: 16px;
+    margin: 0 0 12px 0;
+  }
+  
+  .profile-tracks-grid,
+  .profile-playlists-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+  }
+  
+  .profile-playlist-card {
+    padding: 10px;
+  }
+  
+  .profile-playlist-image {
+    margin-bottom: 10px;
+  }
+  
+  .profile-playlist-name {
+    font-size: 13px;
+  }
+  
+  .profile-playlist-count {
+    font-size: 11px;
+  }
+  
+  .profile-playlist-info {
+    min-height: 45px;
+  }
+  
+  .profile-playlist-image-placeholder .play-icon {
+    font-size: 32px;
+  }
+  
+  .profile-error {
+    min-height: 40vh;
+    padding: 16px;
+  }
+  
+  .profile-error p {
+    font-size: 14px;
+  }
+  
+  .profile-error button {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+  
+  .profile-empty-state {
+    padding: 24px 12px;
+    font-size: 13px;
+  }
+}
+
+/* ============================================
+   PlaylistCard Styles
+   ============================================ */
+
+.playlists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 24px;
+  padding-bottom: 32px;
+}
+
+.playlist-card {
+  background-color: #181818;
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.playlist-image {
+  width: 100%;
+  aspect-ratio: 1;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.playlist-image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.playlist-card:hover .playlist-image-placeholder {
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+}
+
+.playlist-info {
+  min-height: 62px;
+}
+
+.playlist-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 4px;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.playlist-count {
+  font-size: 14px;
+  margin: 0;
+  color: #b3b3b3;
+}
+
+.playlist-card:hover .playlist-count {
+  color: #ffffff;
+}
+
+/* Tablet styles for PlaylistCard */
+@media (max-width: 1024px) {
+  .playlists-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 20px;
+    padding-bottom: 24px;
+  }
+  
+  .playlist-card {
+    padding: 14px;
+  }
+  
+  .playlist-image {
+    margin-bottom: 14px;
+  }
+  
+  .playlist-name {
+    font-size: 15px;
+  }
+  
+  .playlist-count {
+    font-size: 13px;
+  }
+}
+
+/* Mobile styles for PlaylistCard */
+@media (max-width: 768px) {
+  .playlists-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+    padding-bottom: 20px;
+  }
+  
+  .playlist-card {
+    padding: 12px;
+  }
+  
+  .playlist-image {
+    margin-bottom: 12px;
+  }
+  
+  .playlist-name {
+    font-size: 14px;
+  }
+  
+  .playlist-count {
+    font-size: 12px;
+  }
+  
+  .playlist-info {
+    min-height: 50px;
+  }
+}
+
+/* Small mobile styles for PlaylistCard */
+@media (max-width: 480px) {
+  .playlists-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    padding-bottom: 16px;
+  }
+  
+  .playlist-card {
+    padding: 10px;
+  }
+  
+  .playlist-image {
+    margin-bottom: 10px;
+  }
+  
+  .playlist-name {
+    font-size: 13px;
+  }
+  
+  .playlist-count {
+    font-size: 11px;
+  }
+  
+  .playlist-info {
+    min-height: 45px;
+  }
+}
