@@ -8,9 +8,10 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "ts-node server.ts",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "build:server": "tsc -p tsconfig.server.json",
+"start": "node dist/server.js"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",
