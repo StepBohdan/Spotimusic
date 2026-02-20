@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import type { Secret } from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 import crypto from "crypto";
+import cors from "cors";
 import "dotenv/config";
 
 
@@ -23,23 +24,30 @@ const usersByUsername = new Map<string, User>(); // username -> User
 const refreshStore = new Map<string, string>(); // userId -> refreshToken
 
 const app = express();
-
-// CORS
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:5173");
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(204);
-  }
-
-  next();
-});
-
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
+
+// CORS
+const allowedOrigins = new Set([
+  "http://localhost:5173",
+  "https://stepbohdan.github.io",
+]);
+
+app.use(cors({
+  origin: (origin, cb) => {
+  
+    if (!origin) return cb(null, true);
+    if (allowedOrigins.has(origin)) return cb(null, true);
+    return cb(new Error(`CORS blocked for origin: ${origin}`));
+  },
+  credentials: true,
+}));
+
+
+app.options("*", cors());
+
+
 
 // utils
 
@@ -52,10 +60,12 @@ function signRefresh(payload: object) {
 }
 
 function setRefreshCookie(res: Response, token: string) {
+  const isProd = process.env.NODE_ENV === "production";
+
   res.cookie("refreshToken", token, {
     httpOnly: true,
-    secure: false,  
-    sameSite: "strict",
+    secure: isProd,                
+    sameSite: isProd ? "none" : "lax", 
     path: "/auth/refresh",
   });
 }
