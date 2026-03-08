@@ -1,17 +1,20 @@
 # Spotimusic Native
 
-Мобильная версия Spotimusic на React Native с Expo.
+Mobile version of Spotimusic built with **React Native** using **Expo**.
 
-## Установка
+## Installation
 
-1. Установите зависимости:
+1. **Install dependencies:**
+
 ```bash
 npm install
 ```
 
-2. Настройте переменные окружения:
-Создайте файл `.env` в корне проекта:
-```
+2. **Configure environment variables:**
+
+Create a `.env` file in the root of the project:
+
+```env
 PORT=4000
 JWT_ACCESS_SECRET=your_access_secret_here
 JWT_REFRESH_SECRET=your_refresh_secret_here
@@ -19,73 +22,74 @@ EXPO_PUBLIC_API_URL=http://localhost:4000
 EXPO_PUBLIC_RAPIDAPI_KEY=your_rapidapi_key_here
 ```
 
-**Важно для мобильных устройств:**
-- Для Android эмулятора используйте: `http://10.0.2.2:4000`
-- Для iOS симулятора используйте: `http://localhost:4000`
-- Для физического устройства используйте IP адрес вашего компьютера: `http://YOUR_IP:4000`
+> **Important for mobile devices:**
+>
+> - For the **Android emulator** use: `http://10.0.2.2:4000`
+> - For the **iOS simulator** use: `http://localhost:4000`
+> - For a **physical device** use your computer's IP address: `http://YOUR_IP:4000`
 
-3. Запустите сервер:
+3. **Start the server:**
+
 ```bash
 npm run server
 ```
 
-4. Запустите приложение:
+4. **Start the application:**
+
 ```bash
 npm start
 ```
 
-Затем выберите платформу (iOS/Android/Web) или отсканируйте QR-код в Expo Go.
+Then select the platform (iOS / Android / Web) or scan the QR code using **Expo Go**.
 
-## Структура проекта
+## Project Structure
 
-- `src/types/` - TypeScript типы
-- `src/store/` - Redux store и slices
-- `src/components/` - React Native компоненты
-- `src/api/` - API функции для работы с бэкендом
-- `src/pages/` - Страницы приложения
-- `server.ts` - Express сервер для аутентификации
+- `src/types/` — TypeScript types
+- `src/store/` — Redux store and slices
+- `src/components/` — React Native components
+- `src/api/` — API functions for interacting with the backend
+- `src/pages/` — Application pages
+- `server.ts` — Express server for authentication
 
-## Основные функции
+## Main Features
 
-- ✅ Навигация через нижние табы (Home, Create, Profile)
-- ✅ Поиск треков
-- ✅ Воспроизведение музыки
-- ✅ Создание плейлистов
-- ✅ Добавление треков в избранное
-- ✅ Страница плейлиста с управлением
-- ✅ Аутентификация через сервер
+- ✅ Bottom tab navigation (Home, Create, Profile)
+- ✅ Track search
+- ✅ Music playback
+- ✅ Playlist creation
+- ✅ Add tracks to favorites
+- ✅ Playlist page with management controls
+- ✅ Authentication via server
 
-## Запуск сервера
+## Running the Server
 
-Сервер должен быть запущен на порту 4000 (или указанном в .env):
+The server must run on port **4000** (or the port specified in `.env`):
+
 ```bash
 npm run server
 ```
 
-## Настройка API URL для физических устройств
+## Configuring API URL for Physical Devices
 
-1. Узнайте IP адрес вашего компьютера:
-   - Windows: `ipconfig`
-   - macOS/Linux: `ifconfig` или `ip addr`
+1. Find your computer's IP address:
+   - **Windows:** `ipconfig`
+   - **macOS / Linux:** `ifconfig` or `ip addr`
 
-2. Обновите `.env`:
-```
+2. Update `.env`:
+
+```env
 EXPO_PUBLIC_API_URL=http://YOUR_IP:4000
 ```
 
-3. Перезапустите приложение
+3. Restart the application.
 
-## Зависимости
+## Dependencies
 
-- Expo SDK ~54.0.0
-- React Native 0.76.5
-- React 18.3.1
-- Redux Toolkit для управления состоянием
-- React Navigation для навигации
-- expo-av для воспроизведения аудио
-- AsyncStorage для локального хранения
-- Express для сервера аутентификации
-
-## Обновление до SDK 54
-
-Проект обновлен до Expo SDK 54. См. [UPGRADE_SDK54.md](./UPGRADE_SDK54.md) для деталей обновления.
+- **Expo SDK** ~54.0.0
+- **React Native** 0.76.5
+- **React** 18.3.1
+- **Redux Toolkit** for state management
+- **React Navigation** for navigation
+- **expo-av** for audio playback
+- **AsyncStorage** for local storage
+- **Express** for the authentication server
