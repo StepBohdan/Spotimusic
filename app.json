@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "Spotimusic",
+    "slug": "spotimusic-native",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#121212"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.spotimusic.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#121212"
+      },
+      "package": "com.spotimusic.app"
+    },
+    "jsEngine": "hermes",
+    "plugins": [
+      "expo-av"
+    ],
+    "sdkVersion": "54.0.0"
+  }
+}
