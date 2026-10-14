@@ -85,11 +85,11 @@ EXPO_PUBLIC_API_URL=http://YOUR_IP:4000
 
 ## Dependencies
 
-- **Expo SDK** ~54.0.0
-- **React Native** 0.76.5
-- **React** 18.3.1
+- **Expo SDK** ~57.0.0
+- **React Native** 0.86.3
+- **React** 19.2.3
 - **Redux Toolkit** for state management
 - **React Navigation** for navigation
-- **expo-av** for audio playback
+- **expo-audio** for audio playback
 - **AsyncStorage** for local storage
 - **Express** for the authentication server

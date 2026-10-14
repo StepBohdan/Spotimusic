@@ -1,7 +1,13 @@
-import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Modal,
+} from 'react-native';
 import Slider from '@react-native-community/slider';
-import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { cyclePlaybackMode } from '../../store/slices/playerSlice';
@@ -9,7 +15,8 @@ import type { Track } from '../../types/music';
 import IconButton from '../IconButton/IconButton';
 
 interface FullPlayerSheetProps {
-  sheetRef: React.RefObject<BottomSheetModal | null>;
+  visible: boolean;
+  onClose: () => void;
   currentTrack: Track | null;
   isPlaying: boolean;
   hasTrack: boolean;
@@ -30,7 +37,8 @@ function formatTime(seconds: number): string {
 }
 
 export default function FullPlayerSheet({
-  sheetRef,
+  visible,
+  onClose,
   currentTrack,
   isPlaying,
   hasTrack,
@@ -46,28 +54,22 @@ export default function FullPlayerSheet({
   const dispatch = useAppDispatch();
   const playbackMode = useAppSelector((state) => state.player.playbackMode);
   const insets = useSafeAreaInsets();
-  const snapPoints = useMemo(() => ['94%'], []);
 
   const handleCyclePlaybackMode = () => {
     dispatch(cyclePlaybackMode());
   };
 
   return (
-    <BottomSheetModal
-      ref={sheetRef}
-      snapPoints={snapPoints}
-      index={0}
-      enablePanDownToClose
-      backdropComponent={(props) => (
-        <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} opacity={0.6} />
-      )}
-      backgroundStyle={styles.sheetBackground}
-      handleIndicatorStyle={styles.handleIndicator}
+    <Modal
+      visible={visible}
+      animationType="slide"
+      presentationStyle="fullScreen"
+      onRequestClose={onClose}
     >
-      <BottomSheetView style={[styles.content, { paddingBottom: Math.max(insets.bottom, 1000) }]}>
+      <View style={[styles.container, { paddingTop: insets.top + 8, paddingBottom: Math.max(insets.bottom, 24) }]}>
         <View style={styles.topBar}>
           <TouchableOpacity
-            onPress={() => sheetRef.current?.dismiss()}
+            onPress={onClose}
             hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
           >
             <Text style={styles.chevron}>⌄</Text>
@@ -101,9 +103,9 @@ export default function FullPlayerSheet({
           <Slider
             value={currentTime}
             minimumValue={0}
-            maximumValue={duration || 0}
+            maximumValue={Math.max(duration, 0.1)}
             onSlidingComplete={onSeek}
-            disabled={!hasTrack || isLoading}
+            disabled={!hasTrack || isLoading || duration <= 0}
             minimumTrackTintColor="#ffffff"
             maximumTrackTintColor="#3a3a3a"
             thumbTintColor="#ffffff"
@@ -147,9 +149,9 @@ export default function FullPlayerSheet({
             style={styles.playBig}
           >
             <View style={styles.playBigIconContainer}>
-              <IconButton 
-                variant={isPlaying ? 'pause' : 'play'} 
-                size={34} 
+              <IconButton
+                variant={isPlaying ? 'pause' : 'play'}
+                size={34}
                 disabled={!hasTrack || isLoading}
                 iconColor="#000000"
               />
@@ -166,27 +168,21 @@ export default function FullPlayerSheet({
 
           <View style={{ width: 24 }} />
         </View>
-      </BottomSheetView>
-    </BottomSheetModal>
+
+      </View>
+    </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  sheetBackground: {
-    backgroundColor: '#121212',
-  },
-  handleIndicator: {
-    backgroundColor: '#3a3a3a',
-    width: 44,
-  },
-  content: {
+  container: {
     flex: 1,
+    backgroundColor: '#121212',
     paddingHorizontal: 16,
   },
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 8,
     paddingBottom: 10,
   },
   chevron: {
@@ -267,4 +263,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-

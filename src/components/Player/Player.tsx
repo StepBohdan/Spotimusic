@@ -1,11 +1,10 @@
-import { useCallback, useRef, useState, useEffect, useMemo } from 'react';
+import { useCallback, useRef, useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setIsPlaying as setReduxIsPlaying, clearPlayPauseRequests, type PlaybackMode } from '../../store/slices/playerSlice';
 import SoundDriver from './SoundDriver';
 import ControlPanel from './ControlPanel';
 import type { Track } from '../../types/music';
-import { StyleSheet, View } from 'react-native';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { View } from 'react-native';
 import FullPlayerSheet from './FullPlayerSheet';
 
 interface PlayerProps {
@@ -33,9 +32,8 @@ function Player({ currentTrack, allTracks, onTrackEnd, onTrackChange }: PlayerPr
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasTrack, setHasTrack] = useState(false);
 
-  const fullPlayerRef = useRef<BottomSheetModal | null>(null);
-  const canOpenFullPlayer = useMemo(() => Boolean(hasTrack && !loading), [hasTrack, loading]);
-  
+  const [fullPlayerVisible, setFullPlayerVisible] = useState(false);
+
   useEffect(() => {
     onTrackChangeRef.current = onTrackChange;
     onTrackEndRef.current = onTrackEnd;
@@ -107,7 +105,7 @@ function Player({ currentTrack, allTracks, onTrackEnd, onTrackChange }: PlayerPr
     const loadTrack = async () => {
       if (!currentTrack) {
         if (soundController.current) {
-          await soundController.current.pause(true);
+          await soundController.current.unload();
           soundController.current = undefined;
         }
         setHasTrack(false);
@@ -137,9 +135,10 @@ function Player({ currentTrack, allTracks, onTrackEnd, onTrackChange }: PlayerPr
 
       setLoading(true);
       try {
-        // Stop previous track
+        // Stop and release previous track
         if (soundController.current) {
-          await soundController.current.pause(true);
+          await soundController.current.unload();
+          soundController.current = undefined;
         }
 
         const soundInstance = new SoundDriver(audioUrl);
@@ -275,36 +274,38 @@ function Player({ currentTrack, allTracks, onTrackEnd, onTrackChange }: PlayerPr
   }, [currentTrack, allTracks, onTrackChange]);
 
   const handleOpenFullPlayer = useCallback(() => {
-    fullPlayerRef.current?.present();
-  }, []);
+    if (!currentTrack) return;
+    setFullPlayerVisible(true);
+  }, [currentTrack]);
 
   return (
     <View>
-    <ControlPanel
-      onPlay={handlePlay}
-      onPause={handlePause}
-      onOpenFullPlayer={handleOpenFullPlayer}
-      currentTime={currentTime}
-      duration={duration}
-      isPlaying={isPlaying}
-      currentTrack={currentTrack}
-      isLoading={loading}
-      hasTrack={hasTrack}
-    />
-    <FullPlayerSheet
-      sheetRef={fullPlayerRef}
-      currentTrack={currentTrack}
-      isPlaying={isPlaying}
-      hasTrack={hasTrack}
-      isLoading={loading}
-      currentTime={currentTime}
-      duration={duration}
-      onPlay={handlePlay}
-      onPause={handlePause}
-      onSeek={handleSeek}
-      onNextTrack={handleNextTrack}
-      onPrevTrack={handlePrevTrack}
-    />
+      <ControlPanel
+        onPlay={handlePlay}
+        onPause={handlePause}
+        onOpenFullPlayer={handleOpenFullPlayer}
+        currentTime={currentTime}
+        duration={duration}
+        isPlaying={isPlaying}
+        currentTrack={currentTrack}
+        isLoading={loading}
+        hasTrack={hasTrack}
+      />
+      <FullPlayerSheet
+        visible={fullPlayerVisible}
+        onClose={() => setFullPlayerVisible(false)}
+        currentTrack={currentTrack}
+        isPlaying={isPlaying}
+        hasTrack={hasTrack}
+        isLoading={loading}
+        currentTime={currentTime}
+        duration={duration}
+        onPlay={handlePlay}
+        onPause={handlePause}
+        onSeek={handleSeek}
+        onNextTrack={handleNextTrack}
+        onPrevTrack={handlePrevTrack}
+      />
     </View>
   );
 }

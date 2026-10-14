@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
 import IconButton from '../IconButton/IconButton';
 import type { Track } from '../../types/music';
@@ -45,16 +45,13 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
       <View style={styles.row}>
         <Pressable
           style={styles.trackInfo}
-          onPress={() => {
-            onOpenFullPlayer?.();
-          }}
+          onPress={() => onOpenFullPlayer?.()}
+          disabled={!currentTrack}
         >
           {currentTrack?.image ? (
             <Image source={{ uri: currentTrack.image }} style={styles.trackImage} />
           ) : (
-            <View style={styles.trackImagePlaceholder}>
-              <IconButton variant="play" size={24} />
-            </View>
+            <View style={styles.trackImagePlaceholder} />
           )}
           <View style={styles.trackDetails}>
             <Text style={styles.trackName} numberOfLines={1}>

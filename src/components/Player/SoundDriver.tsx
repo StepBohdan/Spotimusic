@@ -1,7 +1,8 @@
-import { Audio } from 'expo-av';
+import { createAudioPlayer, setAudioModeAsync, type AudioPlayer } from 'expo-audio';
 
 class SoundDriver {
-  private sound: Audio.Sound | null = null;
+  private player: AudioPlayer | null = null;
+  private statusSubscription: { remove: () => void } | null = null;
   private pausedAt = 0;
   private isRunning = false;
   private volume = 1;
@@ -9,7 +10,6 @@ class SoundDriver {
   private audioUrl: string;
   private duration = 0;
   private currentTime = 0;
-  private statusUpdateInterval: ReturnType<typeof setInterval> | null = null;
 
   constructor(audioUrl: string, initialVolume = 1) {
     this.audioUrl = audioUrl;
@@ -22,45 +22,34 @@ class SoundDriver {
 
   public async init(_parent: any) {
     try {
-      await Audio.setAudioModeAsync({
-        playsInSilentModeIOS: true,
-        staysActiveInBackground: true,
-        shouldDuckAndroid: true,
+      await setAudioModeAsync({
+        playsInSilentMode: true,
+        shouldPlayInBackground: true,
+        interruptionMode: 'duckOthers',
       });
 
-      const { sound } = await Audio.Sound.createAsync(
-        { uri: this.audioUrl },
-        {
-          shouldPlay: false,
-          volume: this.volume,
-          isLooping: false,
+      // Remote URL as string — supported by expo-audio
+      const player = createAudioPlayer(this.audioUrl, { updateInterval: 250 });
+      player.volume = this.volume;
+      player.loop = false;
+
+      this.statusSubscription = player.addListener('playbackStatusUpdate', (status) => {
+        if (status.duration > 0) {
+          this.duration = status.duration;
         }
-      );
+        this.currentTime = status.currentTime;
+        this.pausedAt = status.currentTime;
+        this.isRunning = status.playing;
 
-      this.sound = sound;
-
-      // Set up status update listener
-      this.sound.setOnPlaybackStatusUpdate((status: any) => {
-        if (status.isLoaded) {
-          if (status.durationMillis) {
-            this.duration = status.durationMillis / 1000;
-          }
-          if (status.positionMillis !== undefined) {
-            this.currentTime = status.positionMillis / 1000;
-            this.pausedAt = this.currentTime;
-          }
-          if (status.didJustFinish) {
-            this.isRunning = false;
-            this.pausedAt = 0;
-            this.currentTime = 0;
-            if (this.onEndedCallback) {
-              this.onEndedCallback();
-            }
-          }
+        if (status.didJustFinish) {
+          this.isRunning = false;
+          this.pausedAt = 0;
+          this.currentTime = 0;
+          this.onEndedCallback?.();
         }
       });
 
-      return Promise.resolve(undefined);
+      this.player = player;
     } catch (error) {
       console.error('Error initializing audio:', error);
       throw new Error('Failed to load audio');
@@ -72,15 +61,15 @@ class SoundDriver {
   }
 
   public getDuration() {
-    return this.duration;
+    return this.duration || this.player?.duration || 0;
   }
 
   public getCurrentTime() {
-    return this.currentTime;
+    return this.player?.currentTime ?? this.currentTime;
   }
 
   public async play() {
-    if (!this.sound) {
+    if (!this.player) {
       throw new Error('Audio not initialized');
     }
 
@@ -89,9 +78,11 @@ class SoundDriver {
     }
 
     try {
-      await this.sound.setPositionAsync(this.pausedAt * 1000);
-      await this.sound.setVolumeAsync(this.volume);
-      await this.sound.playAsync();
+      this.player.volume = this.volume;
+      if (this.pausedAt > 0) {
+        await this.player.seekTo(this.pausedAt);
+      }
+      this.player.play();
       this.isRunning = true;
     } catch (error) {
       console.error('Error playing audio:', error);
@@ -100,33 +91,32 @@ class SoundDriver {
   }
 
   public async pause(reset?: boolean) {
-    if (!this.sound) {
+    if (!this.player) {
       return;
     }
 
     try {
-      const status = await this.sound.getStatusAsync();
-      if (status.isLoaded) {
-        this.pausedAt = reset ? 0 : status.positionMillis / 1000;
-      }
-      await this.sound.pauseAsync();
+      this.pausedAt = reset ? 0 : this.player.currentTime;
+      this.player.pause();
       this.isRunning = false;
+      if (reset) {
+        await this.player.seekTo(0);
+        this.currentTime = 0;
+      }
     } catch (error) {
       console.error('Error pausing audio:', error);
     }
   }
 
   public async seek(seconds: number) {
-    if (!this.sound) return;
+    if (!this.player) return;
 
     try {
-      const status = await this.sound.getStatusAsync();
-      if (status.isLoaded) {
-        const duration = status.durationMillis ? status.durationMillis / 1000 : Infinity;
-        const t = Math.max(0, Math.min(seconds, duration));
-        await this.sound.setPositionAsync(t * 1000);
-        this.pausedAt = t;
-      }
+      const duration = this.player.duration || Infinity;
+      const t = Math.max(0, Math.min(seconds, duration));
+      await this.player.seekTo(t);
+      this.pausedAt = t;
+      this.currentTime = t;
     } catch (error) {
       console.error('Error seeking audio:', error);
     }
@@ -134,15 +124,23 @@ class SoundDriver {
 
   public changeVolume(volume: number) {
     this.volume = volume;
-    if (this.sound) {
-      this.sound.setVolumeAsync(volume).catch(console.error);
+    if (this.player) {
+      this.player.volume = volume;
     }
   }
 
   public async unload() {
-    if (this.sound) {
-      await this.sound.unloadAsync();
-      this.sound = null;
+    try {
+      this.statusSubscription?.remove();
+      this.statusSubscription = null;
+      if (this.player) {
+        this.player.pause();
+        this.player.remove();
+        this.player = null;
+      }
+    } catch (error) {
+      console.error('Error unloading audio:', error);
+      this.player = null;
     }
   }
 }

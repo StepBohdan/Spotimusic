@@ -5,10 +5,6 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
-    "splash": {
-      "resizeMode": "contain",
-      "backgroundColor": "#121212"
-    },
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -22,10 +18,22 @@
       },
       "package": "com.spotimusic.app"
     },
-    "jsEngine": "hermes",
     "plugins": [
-      "expo-av"
-    ],
-    "sdkVersion": "54.0.0"
+      "expo-status-bar",
+      [
+        "expo-audio",
+        {
+          "enableBackgroundPlayback": true
+        }
+      ],
+      "expo-asset",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#121212",
+          "resizeMode": "contain"
+        }
+      ]
+    ]
   }
 }
