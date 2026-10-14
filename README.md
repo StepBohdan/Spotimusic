@@ -17,9 +17,9 @@ Create a `.env` file in the root of the project:
 ```env
 PORT=4000
 JWT_ACCESS_SECRET=your_access_secret_here
-JWT_REFRESH_SECRET=your_refresh_secret_here
+JWT_REFRESH_SECRET=your_refresh_secret_here 
 EXPO_PUBLIC_API_URL=http://localhost:4000
-EXPO_PUBLIC_RAPIDAPI_KEY=your_rapidapi_key_here
+EXPO_PUBLIC_RAPIDAPI_KEY=your_rapidapi_key_here // deezer
 ```
 
 > **Important for mobile devices:**
